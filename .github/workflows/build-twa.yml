@@ -34,10 +34,7 @@ jobs:
       - name: Create TWA project
         run: |
           mkdir twa
-          bubblewrap init \
-            --manifest="${{ github.event.inputs.manifest_url }}" \
-            --directory=twa \
-            --packageId="${{ github.event.inputs.package_name }}"
+          yes | bubblewrap init \--manifest="${{ github.event.inputs.manifest_url }}" \--directory=twa \ --packageId="${{ github.event.inputs.package_name }}"
 
       - name: Build APK
         run: |
