@@ -1,0 +1,51 @@
+name: Build TWA APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_url:
+        description: "PWA manifest URL"
+        required: true
+        default: "https://example.com/manifest.json"
+      package_name:
+        description: "Android package name"
+        required: true
+        default: "com.example.myapp"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli
+
+      - name: Create TWA project
+        run: |
+          mkdir twa
+          bubblewrap init \
+            --manifest="${{ github.event.inputs.manifest_url }}" \
+            --directory=twa \
+            --packageId="${{ github.event.inputs.package_name }}"
+
+      - name: Build APK
+        run: |
+          cd twa
+          bubblewrap build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: twa-apk
+          path: twa/app-release-signed.apk
