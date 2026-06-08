@@ -38,7 +38,7 @@ jobs:
         run: |
           rm -rf twa
           mkdir twa
-          printf "n\n" | bubblewrap init \
+          npx --yes @bubblewrap/cli init \
             --manifest="${{ github.event.inputs.manifest_url }}" \
             --directory=twa \
             --packageId="${{ github.event.inputs.package_name }}"
@@ -46,7 +46,7 @@ jobs:
       - name: Build APK
         run: |
           cd twa
-          bubblewrap build
+          npx --yes @bubblewrap/cli build
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
